@@ -1,7 +1,8 @@
-pub use minreq;
+// pub use minreq;
+pub use reqwest;
 
 /// Default requests timeout in seconds
-pub const DEFAULT_REQUESTS_TIMEOUT: u64 = 4;
+pub const DEFAULT_REQUESTS_TIMEOUT: u64 = 300;
 
 /// Core library version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

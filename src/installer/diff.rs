@@ -68,8 +68,8 @@ pub enum DiffDownloadError {
     PathNotSpecified
 }
 
-impl From<minreq::Error> for DiffDownloadError {
-    fn from(error: minreq::Error) -> Self {
+impl From<reqwest::Error> for DiffDownloadError {
+    fn from(error: reqwest::Error) -> Self {
         DiffDownloadError::DownloadingError(DownloadingError::Minreq(error.to_string()))
     }
 }

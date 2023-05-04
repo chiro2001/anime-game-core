@@ -47,7 +47,7 @@ pub struct Installer {
 
 impl Installer {
     #[inline]
-    pub fn new<T: AsRef<str>>(uri: T) -> Result<Self, minreq::Error> {
+    pub fn new<T: AsRef<str>>(uri: T) -> Result<Self, reqwest::Error> {
         Ok(Self {
             downloader: Downloader::new(uri.as_ref())?,
             temp_folder: temp_dir()

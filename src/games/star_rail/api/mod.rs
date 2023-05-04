@@ -7,7 +7,8 @@ use crate::star_rail::consts::GameEdition;
 pub fn request() -> anyhow::Result<schema::Response> {
     tracing::trace!("Fetching API");
 
-    Ok(minreq::get(GameEdition::selected().api_uri())
-        .with_timeout(crate::DEFAULT_REQUESTS_TIMEOUT)
-        .send()?.json()?)
+    // Ok(minreq::get(GameEdition::selected().api_uri())
+    //     .with_timeout(crate::DEFAULT_REQUESTS_TIMEOUT)
+    //     .send()?.json()?)
+    Ok(reqwest::blocking::get(GameEdition::selected().api_uri())?.json()?)
 }

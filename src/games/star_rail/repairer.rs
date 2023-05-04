@@ -8,13 +8,15 @@ use crate::repairer::IntegrityFile;
 fn try_get_some_integrity_files<T: AsRef<str>>(file_name: T, timeout: Option<u64>) -> anyhow::Result<Vec<IntegrityFile>> {
     let decompressed_path = api::request()?.data.game.latest.decompressed_path;
 
-    let pkg_version = minreq::get(format!("{decompressed_path}/{}", file_name.as_ref()))
-        .with_timeout(timeout.unwrap_or(crate::DEFAULT_REQUESTS_TIMEOUT))
+    let client = reqwest::blocking::Client::builder()
+        .timeout(std::time::Duration::from_secs(timeout.unwrap_or(crate::DEFAULT_REQUESTS_TIMEOUT))).build()?;
+
+    let pkg_version = client.get(format!("{decompressed_path}/{}", file_name.as_ref()))
         .send()?;
 
     let mut files = Vec::new();
 
-    for line in String::from_utf8_lossy(pkg_version.as_bytes()).lines() {
+    for line in String::from_utf8_lossy(&pkg_version.bytes()?).lines() {
         if let Ok(value) = serde_json::from_str::<serde_json::Value>(line) {
             files.push(IntegrityFile {
                 path: PathBuf::from(value["remoteName"].as_str().unwrap()),
